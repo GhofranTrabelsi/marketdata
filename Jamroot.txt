@@ -1,0 +1,195 @@
+#################################################################
+
+#                                                                                            J A M R O O T                                                                                                   #
+
+#################################################################
+
+if ( --veracode in  [ modules.peek : ARGV ] ) {
+
+               .gccflags = -gdwarf-2 -g3 -O0 -fno-builtin ;
+
+               mode = veracode ;
+
+}
+
+ 
+
+project slev5buddx
+
+                               : requirements
+
+                                               <threading>multi
+
+                                               <address-model>32
+
+                                               <toolset>gcc:<cxxflags>$(.gccflags)
+
+                               ;
+
+ 
+
+#################################################################
+
+#                                                            L O C A L              V A R I A B L E S                                                               #
+
+#################################################################
+
+ 
+
+local GL_ROOT = [ gl-root ] ;  
+
+ 
+
+# Get environnement variables to find the path of librairies
+
+import os ;
+
+local BUDDX_LIBS           = [ os.environ BUDDX_LIBS ] ;
+
+local GL_OS_TAG       = [ gl-os-tag ] ;
+
+ 
+
+#################################################################
+
+#                                                            L I B R A R I E S  P A T H                                                                                #
+
+#################################################################
+
+ 
+
+# Used Libraries
+
+use-project /used_aplib : $(GL_ROOT)/aplib/10.2.1.26  ;
+
+ 
+
+#################################################################
+
+#                                             I N S T A L L A T I O N                     P A T H                                                                 #
+
+#################################################################
+
+ 
+
+constant INSTALL_DIR_ROOT_STRIPPED   : "bin_debug_threads" ;
+
+ 
+
+#################################################################
+
+#                                             I N S T A L L A T I O N                     A L I A S E S                                        #
+
+#################################################################
+
+ 
+
+alias aplib                                                                                                                                          : /used_aplib//glvirtualap ;
+
+ 
+
+#strip slev5buddx and copy target to a directory
+
+make slev5buddx
+
+                               :               slev5buddx_unstripped
+
+                               :               @common.strip
+
+                               :               <tag>@gl-tag
+
+                                               <target-type>EXE
+
+                                               <location>$(INSTALL_DIR_ROOT_STRIPPED)
+
+                                              
+
+                               ;
+
+ 
+
+#################################################################
+
+#                                                                                            T A R G E T          S                                                                                                            #
+
+#################################################################
+
+ 
+
+# slev5buddx target                                                                                                                                    
+
+exe                        slev5buddx_unstripped
+
+                               :               #################################################################
+
+                                               #                                                                                            s o u r c e s                                                                                                      #
+
+                                               #################################################################
+
+                                               #[ glob src/*.cpp ]
+
+                                                               ./src/buddx_manager.cpp
+
+                                                               ./src/buddx_connect.cpp
+
+                                                               ./src/buddx_exchange_decoder.cpp
+
+                                                               ./src/buddx_exchange_encoder.cpp
+
+                                                               ./src/buddx_handler.cpp
+
+                                                               ./src/buddx_order_decoder.cpp
+
+                                                               ./src/buddx_order_encoder.cpp
+
+                                                               ./src/buddx_transaction_manager.cpp
+
+                                                               ./src/buddx_session_manager.cpp        
+
+                                                               /used_aplib//lib/skeleton
+
+                                                               /used_infra/glencrypt
+
+                                                               aplib
+
+ 
+
+                               :               #################################################################
+
+                                               #                                                                            r e q u i r e m e n t s                                                                                       #
+
+                                               #################################################################
+
+                                               <link>static                                                                                                       
+
+                                               <include>inc
+
+                                               <include>$(GL_ROOT)/aplib/10.2.1.26/inc
+
+                                               <include>./apibuddx/inc
+
+                                               <library-path>$(GL_ROOT)$(BUDDX_LIBS)
+
+                                               <find-shared-library>ifs
+
+                                               <toolset>gcc:<define>LINUX
+
+                                               <tag>@gl-tag
+
+                               :               #################################################################
+
+                                               #                                                                            d e f a u l t - b u i l d s                                                                    #
+
+                                               #################################################################
+
+                                              
+
+                               :               #################################################################
+
+                                               #                                                            u s a g e - r e q u i r e m e n t s                                                   #
+
+                                               #################################################################
+
+                                              
+
+                               ;
