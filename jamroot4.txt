@@ -31,7 +31,7 @@ local GL_OS_TAG       = [ gl-os-tag ] ;
 
 # Used Libraries
 
-use-project /used_aplib : $(GL_ROOT)/aplib/10.2.1.26  ;
+use-project /used_aplib : $(GL_ROOT)/aplib/10.2.1.26  
 
 #################################################################
 
